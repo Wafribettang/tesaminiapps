@@ -3,145 +3,465 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesaurus Digital - Cari Sinonim Kata</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <title>Tesaurus Digital - Cari Sinonim & Antonim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Menggunakan style yang kamu berikan dengan sedikit tweak warna */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: #f0f0f0;
-            background-image: repeating-linear-gradient(45deg, #e5e5e5 0, #e5e5e5 1px, transparent 0, transparent 50%);
-            background-size: 10px 10px;
+            background-color: #fafafa;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, #e8e8e8 2px, #e8e8e8 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, #e8e8e8 2px, #e8e8e8 4px);
+            min-height: 100vh;
             padding: 20px;
         }
-        .container { max-width: 800px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 40px; }
-        
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .logo {
             display: inline-block;
             background: #000;
             color: #fff;
-            padding: 15px 30px;
-            border: 4px solid #000;
-            box-shadow: 8px 8px 0px #4ecdc4; /* Warna hijau toska */
-            transform: rotate(-1deg);
+            padding: 20px 40px;
+            border: 5px solid #000;
+            box-shadow: 8px 8px 0px #4ecdc4;
+            margin-bottom: 15px;
+            transform: rotate(-2deg);
+            transition: all 0.2s ease;
+        }
+
+        .logo:hover {
+            transform: rotate(0deg);
+            box-shadow: 10px 10px 0px #4ecdc4;
+        }
+
+        .logo h1 {
+            font-size: clamp(24px, 5vw, 42px);
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .search-section {
             background: #fff;
-            border: 4px solid #000;
-            box-shadow: 10px 10px 0px #000;
-            padding: 25px;
+            border: 5px solid #000;
+            box-shadow: 12px 12px 0px #000;
+            padding: 30px;
             margin-bottom: 30px;
+            animation: fadeIn 0.6s ease-out 0.2s both;
         }
 
-        .search-box { display: flex; gap: 10px; }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
         input {
             flex: 1;
-            padding: 15px;
+            min-width: 200px;
+            padding: 16px 20px;
             border: 4px solid #000;
-            box-shadow: 4px 4px 0px #000;
-            font-size: 18px;
-            font-family: inherit;
+            box-shadow: 6px 6px 0px #000;
             outline: none;
+            font-size: 18px;
+            font-weight: 500;
+            font-family: 'Space Grotesk', sans-serif;
+            background: #fafafa;
+            transition: all 0.2s ease;
         }
-        input:focus { box-shadow: 6px 6px 0px #ff6b6b; }
+
+        input:focus {
+            background: #fff;
+            box-shadow: 8px 8px 0px #4ecdc4;
+            transform: translate(-2px, -2px);
+        }
+
+        input::placeholder {
+            color: #999;
+        }
 
         button {
-            padding: 15px 25px;
-            background: #ff6b6b;
-            color: #fff;
+            padding: 16px 32px;
+            background: #4ecdc4;
             border: 4px solid #000;
-            box-shadow: 4px 4px 0px #000;
+            box-shadow: 6px 6px 0px #000;
             cursor: pointer;
             font-weight: 700;
+            font-size: 16px;
+            font-family: 'Space Grotesk', sans-serif;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.1s ease;
+            position: relative;
+            overflow: hidden;
+            color: #000;
         }
-        button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            background: #3dbdb3;
+            box-shadow: 8px 8px 0px #000;
+            transform: translate(-2px, -2px);
+        }
+
+        button:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        button span {
+            position: relative;
+            z-index: 1;
+        }
 
         #result {
             background: #fff;
-            border: 4px solid #000;
-            box-shadow: 10px 10px 0px #ffe66d;
-            padding: 30px;
+            border: 5px solid #000;
+            box-shadow: 12px 12px 0px #ffe66d;
+            padding: 40px;
             display: none;
+            animation: slideUp 0.4s ease-out;
         }
 
-        .entry { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px dashed #000; }
-        .label { 
-            display: inline-block;
-            background: #4ecdc4;
-            padding: 5px 10px;
-            border: 2px solid #000;
-            font-weight: 700;
-            margin-bottom: 10px;
-            font-family: 'Space Mono', monospace;
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .content { font-size: 18px; line-height: 1.6; color: #333; }
-        
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+
         .loader {
-            width: 40px; height: 40px;
+            display: inline-block;
+            width: 50px;
+            height: 50px;
             border: 5px solid #000;
-            border-top-color: #ff6b6b;
+            border-top-color: #4ecdc4;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-            margin: 20px auto;
+            margin-bottom: 15px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .error { color: #ff6b6b; font-weight: 700; text-align: center; }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #000;
+        }
+
+        .result-header h3 {
+            font-size: clamp(24px, 4vw, 32px);
+            font-weight: 700;
+            color: #000;
+        }
+
+        .result-header u {
+            color: #4ecdc4;
+            text-decoration-thickness: 3px;
+            text-decoration-color: #4ecdc4;
+        }
+
+        .entry {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 3px dashed #e0e0e0;
+        }
+
+        .entry:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .label {
+            display: inline-block;
+            background: #ffe66d;
+            color: #000;
+            padding: 8px 16px;
+            border: 3px solid #000;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+            box-shadow: 4px 4px 0px #000;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .content {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #333;
+            padding-left: 20px;
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .content-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .word-badge {
+            background: #f5f5f5;
+            border: 2px solid #000;
+            padding: 6px 12px;
+            font-size: 15px;
+            font-weight: 500;
+            box-shadow: 2px 2px 0px #000;
+            transition: all 0.2s ease;
+        }
+
+        .word-badge:hover {
+            background: #4ecdc4;
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px #000;
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: #fff;
+            padding: 20px;
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0px #000;
+            font-weight: 700;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 3px dashed #000;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #000;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 3px solid #4ecdc4;
+            transition: all 0.2s ease;
+        }
+
+        .footer a:hover {
+            background: #4ecdc4;
+            padding: 2px 6px;
+        }
+
+        @media (max-width: 600px) {
+            .search-box {
+                flex-direction: column;
+            }
+
+            input, button {
+                width: 100%;
+            }
+
+            .logo {
+                padding: 15px 25px;
+            }
+
+            .search-section, #result {
+                padding: 20px;
+            }
+
+            .content {
+                padding-left: 15px;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <div class="logo"><h1>📚 Tesaurus Digital</h1></div>
+        <div class="logo">
+            <h1>📚 Tesaurus Digital</h1>
+        </div>
+        <p class="tagline">Cari Sinonim & Kata Berkaitan dengan Mudah</p>
     </div>
 
     <div class="search-section">
         <div class="search-box">
-            <input type="text" id="kataInput" placeholder="Cari sinonim kata...">
-            <button onclick="cariSinonim()">Cari</button>
+            <input 
+                type="text" 
+                id="kataInput" 
+                placeholder="Ketik kata yang ingin dicari..."
+                autocomplete="off"
+                spellcheck="false"
+            >
+            <button onclick="cariSinonim()">
+                <span>🔍 Cari</span>
+            </button>
         </div>
     </div>
 
     <div id="result"></div>
+
+    <div class="footer">
+        Dibuat dengan ❤️ Oleh @bTiga (Telegram)<br>
+        <small>Data dari Tesaurus Kemendiknasmen</small>
+    </div>
 </div>
 
 <script>
+    const resultDiv = document.getElementById('result');
+    const kataInput = document.getElementById('kataInput');
+    
     async function cariSinonim() {
-        const kata = document.getElementById('kataInput').value.trim();
-        const resDiv = document.getElementById('result');
+        const kata = kataInput.value.trim();
         
-        if(!kata) return;
+        if (!kata) {
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p class="error">⚠️ Silakan masukkan kata yang ingin dicari</p>';
+            return;
+        }
 
-        resDiv.style.display = 'block';
-        resDiv.innerHTML = '<div class="loader"></div>';
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+            <div class="loading">
+                <div class="loader"></div>
+                <div>Mencari sinonim "${kata}"...</div>
+            </div>
+        `;
 
         try {
-            // Ubah URL ini sesuai dengan tempat kamu deploy backend (misal Vercel)
             const response = await fetch(`/api/tesaurus?q=${encodeURIComponent(kata)}`);
             const json = await response.json();
 
-            if(json.error) {
-                resDiv.innerHTML = `<p class="error">⚠️ ${json.error}</p>`;
+            if (json.error) {
+                resultDiv.innerHTML = `<p class="error">❌ ${json.error}</p>`;
             } else {
-                let html = `<h3>Hasil untuk: <u>${json.query}</u></h3><br>`;
+                let html = `
+                    <div class="result-header">
+                        <h3>Hasil untuk: <u>${json.query}</u></h3>
+                    </div>
+                `;
+                
                 json.data.forEach(item => {
                     html += `
                         <div class="entry">
-                            <span class="label">${item.kelas_kata}</span>
-                            <div class="content">${item.sinonim.join(', ')}</div>
+                            <div class="label">${item.kelas_kata}</div>
+                            <div class="content">
+                                <div class="content-words">
+                                    ${item.sinonim.map(s => `<span class="word-badge">${s}</span>`).join('')}
+                                </div>
+                            </div>
                         </div>
                     `;
                 });
-                resDiv.innerHTML = html;
+                
+                const totalWords = json.data.reduce((acc, item) => acc + item.sinonim.length, 0);
+                html += `<div class="stats">✨ Ditemukan ${totalWords} kata berkaitan dalam ${json.data.length} kategori</div>`;
+                
+                resultDiv.innerHTML = html;
             }
-        } catch (e) {
-            resDiv.innerHTML = `<p class="error">⚠️ Terjadi kesalahan server.</p>`;
+        } catch (err) {
+            resultDiv.innerHTML = `
+                <p class="error">
+                    ⚠️ Gagal memuat data. Pastikan koneksi internet Anda stabil.<br>
+                    <small>Error: ${err.message}</small>
+                </p>
+            `;
         }
     }
+
+    kataInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            cariSinonim();
+        }
+    });
+
+    kataInput.focus();
 </script>
+
 </body>
 </html>
